@@ -25,14 +25,10 @@ import java.util.Properties;
 @EnableTransactionManagement
 @EnableWebMvc
 public class SpringConfig implements WebMvcConfigurer {
-
-    private final ApplicationContext applicationContext;
-
     private final Environment env;
 
     @Autowired
-    public SpringConfig(ApplicationContext applicationContext, Environment env) {
-        this.applicationContext = applicationContext;
+    public SpringConfig( Environment env) {
         this.env = env;
     }
 
