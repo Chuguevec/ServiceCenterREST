@@ -70,4 +70,5 @@ public class SpringConfig implements WebMvcConfigurer {
 
         return transactionManager;
     }
+
 }

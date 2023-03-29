@@ -7,6 +7,10 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import ru.example.dao.EmployeeDAO;
+import ru.example.entity.Employee;
+
+import java.util.ArrayList;
+import java.util.List;
 
 @Controller
 @RequestMapping("/employee")
@@ -19,7 +23,8 @@ public class EmployeeController {
     }
 
     @GetMapping
-    public String getAll(Model model) {
-        return "employee/show";
+    public List<Employee> getAll() {
+        List<Employee> employeeList = new ArrayList<>();
+        return employeeList;
     }
 }

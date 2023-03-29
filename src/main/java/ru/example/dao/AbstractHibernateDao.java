@@ -7,7 +7,7 @@ import org.postgresql.shaded.com.ongres.scram.common.util.Preconditions;
 import java.util.List;
 
 
-public abstract class AbstractHibernateDao <T> implements IGenericDao <T>{
+public abstract class AbstractHibernateDao<T> implements IGenericDao<T> {
     private Class<T> clazz;
     protected final SessionFactory sessionFactory;
 
@@ -17,18 +17,13 @@ public abstract class AbstractHibernateDao <T> implements IGenericDao <T>{
     }
 
     @Override
-    public void setClazz(Class<T> clazzToSet) {
-        clazz = Preconditions.checkNotNull(clazzToSet, clazz.getName());
-    }
-
-    @Override
     public T findOne(long id) {
         return (T) getCurrentSession().get(clazz, id);
     }
 
     @Override
     public List<T> findAll() {
-        return getCurrentSession().createQuery("from " + clazz.getName()).list();
+        return getCurrentSession().createQuery("from " + clazz.getName(), clazz).list();
     }
 
     @Override
@@ -55,6 +50,7 @@ public abstract class AbstractHibernateDao <T> implements IGenericDao <T>{
         final T entity = findOne(entityId);
         delete(entity);
     }
+
     protected Session getCurrentSession() {
         return sessionFactory.getCurrentSession();
     }

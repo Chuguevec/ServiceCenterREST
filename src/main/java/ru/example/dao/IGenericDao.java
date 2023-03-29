@@ -4,7 +4,6 @@ import java.io.Serializable;
 import java.util.List;
 
 public interface IGenericDao<T> {
-    void setClazz(Class< T > clazzToSet);
 
     T findOne(final long id);
 
