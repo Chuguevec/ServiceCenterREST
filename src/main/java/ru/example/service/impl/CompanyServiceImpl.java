@@ -50,9 +50,7 @@ public class CompanyServiceImpl implements CompanyService {
 
     private CompanyDto entityToDto(Company company){
         CompanyDto companyDto = new CompanyDto();
-        companyDto.setCustomers(company.getCustomers());
         companyDto.setName(company.getName());
-        companyDto.setEmployees(company.getEmployees());
         return companyDto;
     }
 

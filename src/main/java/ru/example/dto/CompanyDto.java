@@ -1,22 +1,15 @@
 package ru.example.dto;
 
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.RequiredArgsConstructor;
-import lombok.Setter;
-import ru.example.entity.Customer;
-import ru.example.entity.Employee;
+import lombok.*;
 
 import java.util.List;
 
-@Getter @Setter
-@NoArgsConstructor
-@RequiredArgsConstructor
+@Getter
+@Setter
+@EqualsAndHashCode
 public class CompanyDto {
 
     private String name;
-
-    private List<Customer> customers;
-
-    private List<Employee> employees;
+    private List<CustomerDto> customers;
+    private List<EmployeeDto> employees;
 }
