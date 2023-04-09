@@ -17,7 +17,7 @@ public abstract class AbstractHibernateDao<T> implements IGenericDao<T> {
     }
 
     @Override
-    public T findOne(long id) {
+    public T findOne(int id) {
         return (T) getCurrentSession().get(clazz, id);
     }
 
@@ -46,7 +46,7 @@ public abstract class AbstractHibernateDao<T> implements IGenericDao<T> {
     }
 
     @Override
-    public void deleteById(long entityId) {
+    public void deleteById(int entityId) {
         final T entity = findOne(entityId);
         delete(entity);
     }

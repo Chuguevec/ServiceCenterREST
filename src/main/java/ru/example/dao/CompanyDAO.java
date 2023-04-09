@@ -12,4 +12,9 @@ public class CompanyDAO extends AbstractHibernateDao<Company>{
     public CompanyDAO(SessionFactory sessionFactory) {
         super(Company.class, sessionFactory);
     }
+
+    public Company findByName(String name){
+        return getCurrentSession().createQuery("SELECT c FROM Company c where c.name = :name", Company.class)
+                .setParameter("name", name).getSingleResult();
+    }
 }

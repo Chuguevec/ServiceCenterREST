@@ -13,6 +13,6 @@ import java.util.List;
 public class ProjectDto {
     private String name;
     private BigDecimal price;
-    private CustomerDto customer;
+    private String customerName;
     private List<EmployeeDto> employees;
 }

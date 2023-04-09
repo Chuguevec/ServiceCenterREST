@@ -1,17 +1,18 @@
 package ru.example.service;
 
 import ru.example.dto.CompanyDto;
+import ru.example.dto.CompanyWithIdDto;
 
 import java.util.List;
 
 public interface CompanyService {
-    CompanyDto findOne(int id);
+    CompanyWithIdDto findOne(int id);
 
-    List<CompanyDto> findAll();
+    List<CompanyWithIdDto> findAll();
 
     Integer save(CompanyDto companyDto);
 
-    void update(CompanyDto companyDto);
+    CompanyWithIdDto update(CompanyDto companyDto, int id);
 
-    void delete(int id);
+    CompanyWithIdDto delete(int id);
 }

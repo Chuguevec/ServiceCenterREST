@@ -1,17 +1,18 @@
 package ru.example.service;
 
-import ru.example.dto.CustomerDto;
+import ru.example.entity.Customer;
 
 import java.util.List;
 
 public interface CustomerService {
-    CustomerDto findOne(int id);
+    Customer findOne(int id);
 
-    List<CustomerDto> findAll();
+    List<Customer> findAll();
+    List<Customer> findAll(int page, int perPage);
 
-    Integer save(CustomerDto customerDto);
+    Customer save(Customer customer);
 
-    void update(CustomerDto customerDto);
+    void update(Customer customer);
 
     void delete(int id);
 }

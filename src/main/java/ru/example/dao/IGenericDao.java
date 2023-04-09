@@ -5,7 +5,7 @@ import java.util.List;
 
 public interface IGenericDao<T> {
 
-    T findOne(final long id);
+    T findOne(final int id);
 
     List<T> findAll();
 
@@ -15,5 +15,5 @@ public interface IGenericDao<T> {
 
     void delete(final T entity);
 
-    void deleteById(final long entityId);
+    void deleteById(final int entityId);
 }

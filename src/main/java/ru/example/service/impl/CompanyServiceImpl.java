@@ -5,8 +5,10 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import ru.example.dao.CompanyDAO;
 import ru.example.dto.CompanyDto;
+import ru.example.dto.CompanyWithIdDto;
 import ru.example.entity.Company;
 import ru.example.service.CompanyService;
+import ru.example.utils.DtoUtil;
 
 import java.util.List;
 import java.util.stream.Collectors;
@@ -22,36 +24,38 @@ public class CompanyServiceImpl implements CompanyService {
         this.companyDAO = companyDAO;
     }
 
-    public CompanyDto findOne(int id){
-        return entityToDto(companyDAO.findOne(id));
+    @Override
+    public CompanyWithIdDto findOne(int id) {
+        Company company = companyDAO.findOne(id);
+        return DtoUtil.companyToCompanyWithIdDto(company);
     }
-
-    public List<CompanyDto> findAll(){
-        return companyDAO.findAll().stream().map(this::entityToDto).collect(Collectors.toList());
+    @Override
+    public List<CompanyWithIdDto> findAll(){
+        return companyDAO.findAll().stream().map(DtoUtil::companyToCompanyWithIdDto).collect(Collectors.toList());
     }
     @Transactional
+    @Override
     public Integer save (CompanyDto companyDto){
-        return companyDAO.create(dtoToEntity(companyDto)).getId();
+        return companyDAO.create(DtoUtil.companyDtoToCompany(companyDto)).getId();
     }
     @Transactional
-    public void update (CompanyDto companyDto){
-       companyDAO.update(dtoToEntity(companyDto));
-    }
-    @Transactional
-    public void delete (int id){
-        companyDAO.deleteById(id);
-    }
-
-    private Company dtoToEntity(CompanyDto companyDto){
-        Company company = new Company();
+    @Override
+    public CompanyWithIdDto update (CompanyDto companyDto, int id){
+        Company company = companyDAO.findOne(id);
         company.setName(companyDto.getName());
-        return company;
+        return DtoUtil.companyToCompanyWithIdDto(company);
+    }
+    @Transactional
+    @Override
+    public CompanyWithIdDto delete (int id){
+        Company company = companyDAO.findOne(id);
+        if(company == null){
+            return null;
+        }
+        companyDAO.deleteById(id);
+        return DtoUtil.companyToCompanyWithIdDto(company);
     }
 
-    private CompanyDto entityToDto(Company company){
-        CompanyDto companyDto = new CompanyDto();
-        companyDto.setName(company.getName());
-        return companyDto;
-    }
+
 
 }
