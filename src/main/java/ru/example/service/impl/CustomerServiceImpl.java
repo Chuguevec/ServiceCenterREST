@@ -51,6 +51,11 @@ public class CustomerServiceImpl implements CustomerService {
     }
 
     @Override
+    public List<Customer> findAllByCompany(Company company) {
+        return customerDAO.findAllByCompany(company);
+    }
+
+    @Override
     @Transactional
     public Customer save(Customer customer) {
         //Иницилизируем Company

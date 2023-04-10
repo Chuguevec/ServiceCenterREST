@@ -1,5 +1,6 @@
 package ru.example.service;
 
+import ru.example.entity.Company;
 import ru.example.entity.Customer;
 
 import java.util.List;
@@ -9,6 +10,8 @@ public interface CustomerService {
 
     List<Customer> findAll();
     List<Customer> findAll(int page, int perPage);
+
+    List<Customer> findAllByCompany(Company company);
 
     Customer save(Customer customer);
 
