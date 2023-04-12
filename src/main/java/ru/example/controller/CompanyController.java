@@ -7,7 +7,10 @@ import org.springframework.web.bind.annotation.*;
 import ru.example.dto.CompanyDto;
 import ru.example.dto.CompanyWithIdDto;
 import ru.example.dto.CustomerDto;
+import ru.example.dto.EmployeeDto;
 import ru.example.entity.Company;
+import ru.example.entity.Customer;
+import ru.example.entity.Employee;
 import ru.example.service.CompanyService;
 import ru.example.service.CustomerService;
 import ru.example.service.EmployeeService;
@@ -40,14 +43,22 @@ public class CompanyController {
     }
 
     @GetMapping("/{id}")
-    public CompanyWithIdDto show(@PathVariable("id") Integer id) {
+    public CompanyWithIdDto getOne(@PathVariable("id") Integer id) {
         return DtoUtil.companyToCompanyWithIdDto(companyService.findOne(id));
     }
 
     @GetMapping("/{id}/customers")
     public List<CustomerDto> getCustomersByCompany(@PathVariable("id") Integer id) {
         Company company = companyService.findOne(id);
-        return customerService.findAllByCompany(company).stream().map(DtoUtil::customerToCustomerDto).collect(Collectors.toList());
+        List<Customer> companyCustomers = customerService.findAllByCompany(company);
+        return companyCustomers.stream().map(DtoUtil::customerToCustomerDto).collect(Collectors.toList());
+    }
+
+    @GetMapping ("/{id}/employees")
+    public List<EmployeeDto> getEmployeesCompany(@PathVariable("id") Integer id){
+        Company company = companyService.findOne(id);
+        List<Employee> employees = employeeService.findAllByCompany(company);
+        return employees.stream().map(DtoUtil::employeeToEmployeeDto).collect(Collectors.toList());
     }
 
     @PostMapping

@@ -1,16 +1,12 @@
 package ru.example.utils;
 
-import org.springframework.web.bind.annotation.RequestParam;
-import ru.example.dto.CompanyDto;
-import ru.example.dto.CompanyWithIdDto;
-import ru.example.dto.CustomerDto;
-import ru.example.dto.ProjectDto;
+import ru.example.dto.*;
 import ru.example.entity.Company;
 import ru.example.entity.Customer;
+import ru.example.entity.Employee;
 import ru.example.entity.Project;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.util.stream.Collectors;
 
 public class DtoUtil {
 
@@ -27,14 +23,6 @@ public class DtoUtil {
         return companyDto;
     }
 
-    public static List<CustomerDto> customerListToCustomerDtoList(List<Customer> customers){
-        List<CustomerDto> customerDtoList = new ArrayList<>();
-        for (Customer customer : customers) {
-            customerDtoList.add(customerToCustomerDto(customer));
-        }
-        return customerDtoList;
-    }
-
     public static CustomerDto customerToCustomerDto(Customer customer){
         CustomerDto customerDto = new CustomerDto();
         customerDto.setName(customer.getName());
@@ -42,33 +30,65 @@ public class DtoUtil {
         customerDto.setCompanyName(customer.getCompany().getName());
         return customerDto;
     }
-        //Не сетаем Company
+
     public static Customer customerDtoToCustomer(CustomerDto customerDto) {
         Customer customer = new Customer();
         customer.setName(customerDto.getName());
         customer.setAge(customerDto.getAge());
-        Company company = new Company();
+        Company company = new Company(); // need persist in service
         company.setName(customerDto.getName());
         customer.setCompany(company);
         return customer;
     }
 
-    private Customer dtoToEntity(CustomerDto customerDto) {
-        Customer customer = new Customer();
-        customer.setName(customerDto.getName());
-        customer.setAge(customerDto.getAge());
-        return customer;
+    public static Employee employeeDtoToEmployee(EmployeeDto employeeDto){
+        Employee employee = new Employee();
+        employee.setId(employeeDto.getId());
+        employee.setName(employeeDto.getName());
+        employee.setSalary(employeeDto.getSalary());
+        employee.setOccupation(employeeDto.getOccupation());
+//        employee.setProjects(employeeDto.getProjects().stream()
+//                .map(DtoUtil::projectDtoToProject).collect(Collectors.toList()));
+        Company company = new Company(); // need persist in service
+        company.setName(employeeDto.getCompanyName());
+        employee.setCompany(company);
+        return employee;
     }
 
-    private List<ProjectDto> projectListToProjectDtoList (List<Project> projects) {
-        List<ProjectDto> projectDtoList = new ArrayList<>();
+    public static EmployeeDto employeeToEmployeeDto(Employee employee){
+        EmployeeDto employeeDto = new EmployeeDto();
+        employeeDto.setSalary(employee.getSalary());
+//        employeeDto.setProjects(employee.getProjects().stream()
+//                .map(DtoUtil::projectToProjectDto).collect(Collectors.toList()));
+        employeeDto.setOccupation(employee.getOccupation());
+        employeeDto.setId(employee.getId());
+        employeeDto.setName(employee.getName());
+        employeeDto.setCompanyName(employee.getCompany().getName());
+        return employeeDto;
+    }
 
-        for (Project project : projects) {
-            ProjectDto projectDto = new ProjectDto();
-            projectDto.setName(project.getName());
-            projectDto.setPrice(project.getPrice());
-        }
-        return projectDtoList;
+    public static Project projectDtoToProject(ProjectDto projectDto){
+        Project project = new Project();
+        Customer customer = new Customer(); // need persist in service
+        customer.setName(projectDto.getCustomerName());
+        project.setCustomer(customer);
+        project.setPrice(projectDto.getPrice());
+        project.setEmployees(projectDto.getEmployees().stream()
+                .map(DtoUtil::employeeDtoToEmployee).collect(Collectors.toList()));
+        project.setId(projectDto.getId());
+        project.setName(projectDto.getName());
+        return project;
+    }
+
+    public static ProjectDto projectToProjectDto(Project project){
+        ProjectDto projectDto = new ProjectDto();
+        projectDto.setPrice(project.getPrice());
+        projectDto.setCustomerName(project.getCustomer().getName());
+        projectDto.setEmployees(project.getEmployees().stream()
+                .map(DtoUtil::employeeToEmployeeDto).collect(Collectors.toList()));
+        projectDto.setId(project.getId());
+        projectDto.setName(project.getName());
+        return projectDto;
     }
 
 }

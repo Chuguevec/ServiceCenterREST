@@ -1,14 +1,16 @@
 package ru.example.entity;
 
-import lombok.Data;
+import lombok.Getter;
+import lombok.Setter;
 import org.hibernate.annotations.CreationTimestamp;
 
 import javax.persistence.*;
-import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.List;
 
 @Entity
-@Data
+@Getter
+@Setter
 @Table(name = "employee")
 public class Employee {
     @Id
@@ -21,7 +23,7 @@ public class Employee {
 
     @CreationTimestamp
     @Column(name = "join_date")
-    private LocalDate joinDate;
+    private LocalDateTime joinDate;
 
     @ManyToOne
     @JoinColumn(name = "company_id", referencedColumnName = "id")
