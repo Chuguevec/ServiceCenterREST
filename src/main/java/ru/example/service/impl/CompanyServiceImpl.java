@@ -6,10 +6,10 @@ import org.springframework.transaction.annotation.Transactional;
 import ru.example.dao.CompanyDAO;
 import ru.example.entity.Company;
 import ru.example.service.CompanyService;
-import ru.example.utils.DtoUtil;
+import ru.example.utils.exception.CompanyNotFoundException;
 
 import java.util.List;
-import java.util.stream.Collectors;
+import java.util.Optional;
 
 @Service
 @Transactional(readOnly = true)
@@ -24,7 +24,8 @@ public class CompanyServiceImpl implements CompanyService {
 
     @Override
     public Company findOne(int id) {
-        return companyDAO.findOne(id);
+        Optional<Company> company = companyDAO.findOne(id);
+        return company.orElse(company.orElseThrow(CompanyNotFoundException::new));
     }
     @Override
     public List<Company> findAll(){
@@ -42,8 +43,14 @@ public class CompanyServiceImpl implements CompanyService {
     }
     @Transactional
     @Override
-    public void delete (int id){
+    public void deleteById (int id){
         companyDAO.deleteById(id);
+    }
+
+    @Transactional
+    @Override
+    public void delete(Company company){
+        companyDAO.delete(company);
     }
 
 

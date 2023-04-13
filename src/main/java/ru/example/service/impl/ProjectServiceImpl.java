@@ -8,8 +8,10 @@ import ru.example.dto.ProjectDto;
 import ru.example.entity.Customer;
 import ru.example.entity.Project;
 import ru.example.service.ProjectService;
+import ru.example.utils.exception.ProjectNotFoundException;
 
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Service
@@ -24,8 +26,9 @@ public class ProjectServiceImpl implements ProjectService {
     }
 
     @Override
-    public ProjectDto findOne(int id) {
-        return entityToDto(projectDAO.findOne(id));
+    public Project findOne(int id) {
+        Optional<Project> project = projectDAO.findOne(id);
+        return project.orElseThrow(ProjectNotFoundException::new);
     }
 
     @Override
@@ -33,10 +36,9 @@ public class ProjectServiceImpl implements ProjectService {
         List<Project> projects = projectDAO.findAll();
         return projects.stream().map(this::entityToDto).collect(Collectors.toList());
     }
-
-    public List<ProjectDto> findAllByCustomer(Customer customer){
-        List<Project> projects = projectDAO.findAllByCustomer(customer);
-        return projects.stream().map(this::entityToDto).collect(Collectors.toList());
+    @Override
+    public List<Project> findAllByCustomer(Customer customer){
+        return projectDAO.findAllByCustomer(customer);
     }
 
     @Override

@@ -5,6 +5,7 @@ import org.hibernate.SessionFactory;
 import org.postgresql.shaded.com.ongres.scram.common.util.Preconditions;
 
 import java.util.List;
+import java.util.Optional;
 
 
 public abstract class AbstractHibernateDao<T> implements IGenericDao<T> {
@@ -17,8 +18,9 @@ public abstract class AbstractHibernateDao<T> implements IGenericDao<T> {
     }
 
     @Override
-    public T findOne(int id) {
-        return (T) getCurrentSession().get(clazz, id);
+    public Optional<T> findOne(int id) {
+        T t = (T) getCurrentSession().get(clazz, id);
+        return Optional.ofNullable(t);
     }
 
     @Override
@@ -47,8 +49,9 @@ public abstract class AbstractHibernateDao<T> implements IGenericDao<T> {
 
     @Override
     public void deleteById(int entityId) {
-        final T entity = findOne(entityId);
-        delete(entity);
+        final Optional<T> optEntity = findOne(entityId);
+        optEntity.ifPresent(this::delete);
+
     }
 
     protected Session getCurrentSession() {

@@ -1,22 +1,18 @@
 package ru.example.service.impl;
 
-import org.hibernate.Hibernate;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import ru.example.dao.CompanyDAO;
 import ru.example.dao.CustomerDAO;
 import ru.example.dao.ProjectDAO;
-import ru.example.dto.CustomerDto;
-import ru.example.dto.ProjectDto;
 import ru.example.entity.Company;
 import ru.example.entity.Customer;
-import ru.example.entity.Project;
 import ru.example.service.CustomerService;
+import ru.example.utils.exception.CustomerNotFoundException;
 
-import java.util.ArrayList;
 import java.util.List;
-import java.util.stream.Collectors;
+import java.util.Optional;
 
 @Service
 @Transactional(readOnly = true)
@@ -35,9 +31,8 @@ public class CustomerServiceImpl implements CustomerService {
 
     @Override
     public Customer findOne(int id) {
-        Customer customer = customerDAO.findOne(id);
-        Hibernate.initialize(customer.getProjects());
-        return customer;
+        Optional<Customer> optCustomer = customerDAO.findOne(id);
+        return optCustomer.orElseThrow(CustomerNotFoundException::new);
     }
 
     @Override

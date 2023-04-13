@@ -15,11 +15,12 @@ import ru.example.service.CompanyService;
 import ru.example.service.CustomerService;
 import ru.example.service.EmployeeService;
 import ru.example.utils.DtoUtil;
+import ru.example.utils.ErrorResponse;
+import ru.example.utils.exception.CompanyNotFoundException;
 
 import java.util.List;
 import java.util.stream.Collectors;
 
-import static java.util.Objects.isNull;
 
 @RestController
 @RequestMapping("/company")
@@ -44,7 +45,8 @@ public class CompanyController {
 
     @GetMapping("/{id}")
     public CompanyWithIdDto getOne(@PathVariable("id") Integer id) {
-        return DtoUtil.companyToCompanyWithIdDto(companyService.findOne(id));
+        Company company = companyService.findOne(id);
+        return DtoUtil.companyToCompanyWithIdDto(company);
     }
 
     @GetMapping("/{id}/customers")
@@ -72,24 +74,25 @@ public class CompanyController {
     public ResponseEntity<String> update(@PathVariable("id") int id,
                                          @RequestBody CompanyDto companyDto) {
 
-        if (id <= 0) return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(null);
+        companyService.findOne(id); //Проверяем наличие
         Company updatedCompany = DtoUtil.companyDtoToCompany(companyDto);
         updatedCompany.setId(id);
-        Company savedCompany = companyService.update(updatedCompany);
-        if (isNull(savedCompany)) {
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(null);
-        } else {
-            return ResponseEntity.status(HttpStatus.OK).body(null);
-        }
-
+        companyService.update(updatedCompany);
+            return ResponseEntity.status(HttpStatus.OK).body("Success update");
     }
 
     @DeleteMapping("/{id}")
     public ResponseEntity<String> delete(@PathVariable("id") int id) {
-        if (id <= 0) return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(null);
-        companyService.delete(id);
-        return ResponseEntity.status(HttpStatus.OK).body(null);
+        companyService.delete(companyService.findOne(id));
+        return ResponseEntity.status(HttpStatus.OK).body("Success delete");
 
+    }
+    @ExceptionHandler
+    private ResponseEntity<ErrorResponse> handelException (CompanyNotFoundException e){
+        ErrorResponse response = new ErrorResponse(
+                "Company with this id not found", System.currentTimeMillis()
+        );
+        return new ResponseEntity<>(response, HttpStatus.NOT_FOUND);
     }
 
 

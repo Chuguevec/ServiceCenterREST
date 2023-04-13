@@ -7,8 +7,10 @@ import ru.example.dao.EmployeeDAO;
 import ru.example.entity.Company;
 import ru.example.entity.Employee;
 import ru.example.service.EmployeeService;
+import ru.example.utils.exception.EmployeeNotFoundException;
 
 import java.util.List;
+import java.util.Optional;
 
 @Service
 public class EmployeeServiceImpl implements EmployeeService {
@@ -23,7 +25,8 @@ public class EmployeeServiceImpl implements EmployeeService {
     @Transactional(readOnly = true)
     @Override
     public Employee findOne(int id) {
-        return employeeDAO.findOne(id);
+        Optional<Employee> optEmployee = employeeDAO.findOne(id);
+        return optEmployee.orElseThrow(EmployeeNotFoundException::new);
     }
 
     @Transactional(readOnly = true)
@@ -47,7 +50,7 @@ public class EmployeeServiceImpl implements EmployeeService {
     @Transactional
     @Override
     public Employee update(Employee employee) {
-       return employeeDAO.update(employee);
+        return employeeDAO.update(employee);
 
     }
 
