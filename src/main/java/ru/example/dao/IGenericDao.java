@@ -11,7 +11,7 @@ public interface IGenericDao<T> {
 
     T create(final T entity);
 
-    T update(final T entity);
+    Optional<T> update(final T entity);
 
     void delete(final T entity);
 

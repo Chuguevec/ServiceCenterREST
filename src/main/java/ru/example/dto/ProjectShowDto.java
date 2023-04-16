@@ -8,7 +8,7 @@ import java.util.List;
 
 @Getter
 @Setter
-public class ProjectDto {
+public class ProjectShowDto {
     private Integer id;
     private String name;
     private BigDecimal price;

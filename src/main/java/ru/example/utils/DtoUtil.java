@@ -47,8 +47,6 @@ public class DtoUtil {
         employee.setName(employeeDto.getName());
         employee.setSalary(employeeDto.getSalary());
         employee.setOccupation(employeeDto.getOccupation());
-//        employee.setProjects(employeeDto.getProjects().stream()
-//                .map(DtoUtil::projectDtoToProject).collect(Collectors.toList()));
         Company company = new Company(); // need persist in service
         company.setName(employeeDto.getCompanyName());
         employee.setCompany(company);
@@ -67,7 +65,7 @@ public class DtoUtil {
         return employeeDto;
     }
 
-    public static Project projectDtoToProject(ProjectDto projectDto){
+    public static Project projectDtoToProject(ProjectShowDto projectDto){
         Project project = new Project();
         Customer customer = new Customer(); // need persist in service
         customer.setName(projectDto.getCustomerName());
@@ -80,8 +78,8 @@ public class DtoUtil {
         return project;
     }
 
-    public static ProjectDto projectToProjectDto(Project project){
-        ProjectDto projectDto = new ProjectDto();
+    public static ProjectShowDto projectToProjectDto(Project project){
+        ProjectShowDto projectDto = new ProjectShowDto();
         projectDto.setPrice(project.getPrice());
         projectDto.setCustomerName(project.getCustomer().getName());
         projectDto.setEmployees(project.getEmployees().stream()
@@ -91,4 +89,24 @@ public class DtoUtil {
         return projectDto;
     }
 
+    public static Project projectToSaveDtoToProject(ProjectToSaveDto projectToSaveDto) {
+        Project project = new Project();
+        project.setPrice(projectToSaveDto.getPrice());
+        project.setName(projectToSaveDto.getName());
+        return project;
+    }
+
+    public static void customerUpdateValueFromDto(Customer customer, CustomerDto customerDto) {
+        customer.setName(customerDto.getName());
+        customer.setAge(customerDto.getAge());
+        if(!customer.getCompany().getName().equals(customerDto.getCompanyName())){
+            Company company = new Company();
+            company.setName(customerDto.getCompanyName());
+            customer.setCompany(company);
+        }
+
+
+
+
+    }
 }

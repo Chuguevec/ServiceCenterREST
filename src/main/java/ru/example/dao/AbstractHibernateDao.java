@@ -9,7 +9,7 @@ import java.util.Optional;
 
 
 public abstract class AbstractHibernateDao<T> implements IGenericDao<T> {
-    private Class<T> clazz;
+    private final Class<T> clazz;
     protected final SessionFactory sessionFactory;
 
     public AbstractHibernateDao(Class<T> clazz, SessionFactory sessionFactory) {
@@ -36,9 +36,9 @@ public abstract class AbstractHibernateDao<T> implements IGenericDao<T> {
     }
 
     @Override
-    public T update(T entity) {
+    public Optional<T> update(T entity) {
         Preconditions.checkNotNull(entity, clazz.getName());
-        return (T) getCurrentSession().merge(entity);
+        return Optional.ofNullable((T)getCurrentSession().merge(entity));
     }
 
     @Override

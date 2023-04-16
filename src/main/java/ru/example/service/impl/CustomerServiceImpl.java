@@ -8,7 +8,9 @@ import ru.example.dao.CustomerDAO;
 import ru.example.dao.ProjectDAO;
 import ru.example.entity.Company;
 import ru.example.entity.Customer;
+import ru.example.entity.Project;
 import ru.example.service.CustomerService;
+import ru.example.utils.exception.CompanyNotFoundException;
 import ru.example.utils.exception.CustomerNotFoundException;
 
 import java.util.List;
@@ -54,7 +56,7 @@ public class CustomerServiceImpl implements CustomerService {
     @Transactional
     public Customer save(Customer customer) {
         //Иницилизируем Company
-        Company company = companyDAO.findByName(customer.getCompany().getName());
+        Company company = companyDAO.findByName(customer.getCompany().getName()).orElseThrow(CompanyNotFoundException::new);
         customer.setCompany(company);
         company.getCustomers().add(customer);
         return customerDAO.create(customer);
@@ -62,13 +64,25 @@ public class CustomerServiceImpl implements CustomerService {
 
     @Override
     @Transactional
-    public void update(Customer customer) {
-        customerDAO.update(customer);
+    public Customer update(Customer customer) {
+        Company company = companyDAO.findByName(customer.getCompany().getName()).orElseThrow(CompanyNotFoundException::new);
+        customer.setCompany(company);
+        return customerDAO.update(customer).orElseThrow(CustomerNotFoundException::new);
+    }
+
+    @Override
+    @Transactional
+    public void addProject(int customerId, Project project) {
+        Customer customer = customerDAO.findOne(customerId).orElseThrow(CustomerNotFoundException::new);
+        project.setCustomer(customer);
+        customer.getProjects().add(project);
+        projectDAO.create(project);
     }
 
     @Override
     @Transactional
     public void delete(int id) {
+        customerDAO.findOne(id).orElseThrow(CustomerNotFoundException::new);
         customerDAO.deleteById(id);
     }
 

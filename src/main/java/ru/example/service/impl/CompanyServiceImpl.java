@@ -39,7 +39,7 @@ public class CompanyServiceImpl implements CompanyService {
     @Transactional
     @Override
     public Company update (Company updatedCompany){
-        return companyDAO.update(updatedCompany);
+        return companyDAO.update(updatedCompany).orElseThrow(CompanyNotFoundException::new);
     }
     @Transactional
     @Override
