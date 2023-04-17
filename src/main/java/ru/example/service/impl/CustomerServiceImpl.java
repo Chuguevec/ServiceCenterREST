@@ -43,8 +43,13 @@ public class CustomerServiceImpl implements CustomerService {
     }
 
     @Override
-    public List<Customer> findAll(int page, int perPage) {
-        return customerDAO.findAllByPaging(page, perPage);
+    public List<Customer> findAll(int page, int size) {
+        return customerDAO.findAllByPaging(page, size);
+    }
+
+    @Override
+    public Customer findByName(String name) {
+        return customerDAO.findByName(name).orElseThrow(CompanyNotFoundException::new);
     }
 
     @Override

@@ -18,6 +18,7 @@ import ru.example.utils.DtoUtil;
 import ru.example.utils.ErrorResponse;
 import ru.example.utils.exception.CompanyNotFoundException;
 
+import java.util.Collections;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -39,8 +40,14 @@ public class CompanyController {
 
 
     @GetMapping
-    public List<CompanyWithIdDto> getAll() {
-        return companyService.findAll().stream().map(DtoUtil::companyToCompanyWithIdDto).collect(Collectors.toList());
+    public List<CompanyWithIdDto> getAll(@RequestParam(value = "name", required = false) String name) {
+        List<Company> companies;
+        if(name != null){
+            companies = Collections.singletonList(companyService.findByName(name));
+        } else {
+            companies = companyService.findAll();
+        }
+        return companies.stream().map(DtoUtil::companyToCompanyWithIdDto).collect(Collectors.toList());
     }
 
     @GetMapping("/{id}")
@@ -48,6 +55,7 @@ public class CompanyController {
         Company company = companyService.findOne(id);
         return DtoUtil.companyToCompanyWithIdDto(company);
     }
+
 
     @GetMapping("/{id}/customers")
     public List<CustomerDto> getCustomersByCompany(@PathVariable("id") Integer id) {

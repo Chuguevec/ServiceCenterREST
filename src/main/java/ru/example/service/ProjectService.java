@@ -20,4 +20,6 @@ public interface ProjectService {
     List<Project> findAllByCustomer(Customer customer);
 
     void addProjectToEmployee(int projectId, Integer employeeId);
+
+    List<Project> findAllWithPagination(Integer page, Integer size);
 }

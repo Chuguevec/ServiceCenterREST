@@ -6,8 +6,10 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import ru.example.dto.EmployeeDto;
 import ru.example.dto.ProjectShowDto;
+import ru.example.entity.Company;
 import ru.example.entity.Employee;
 import ru.example.entity.Project;
+import ru.example.service.CompanyService;
 import ru.example.service.EmployeeService;
 import ru.example.utils.DtoUtil;
 import ru.example.utils.ErrorResponse;
@@ -22,15 +24,24 @@ import java.util.stream.Collectors;
 @RequestMapping("/employee")
 public class EmployeeController {
     private final EmployeeService employeeService;
+    private final CompanyService companyService;
 
     @Autowired
-    public EmployeeController(EmployeeService employeeService) {
+    public EmployeeController(EmployeeService employeeService, CompanyService companyService) {
         this.employeeService = employeeService;
+        this.companyService = companyService;
     }
 
     @GetMapping
-    public List<EmployeeDto> getAll() {
-        List<Employee> employeeList = employeeService.findAll();
+    public List<EmployeeDto> getAll(@RequestParam(value = "company_name", required = false) String companyName) {
+        List<Employee> employeeList;
+        if (companyName != null) {
+            Company company = companyService.findByName(companyName);
+            employeeList = employeeService.findAllByCompany(company);
+        } else {
+            employeeList = employeeService.findAll();
+        }
+
         return employeeList.stream().map(DtoUtil::employeeToEmployeeDto).collect(Collectors.toList());
     }
 

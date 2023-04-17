@@ -8,6 +8,7 @@ import ru.example.entity.Company;
 import ru.example.entity.Customer;
 
 import java.util.List;
+import java.util.Optional;
 
 @Repository
 public class CustomerDAO extends AbstractHibernateDao<Customer> {
@@ -16,15 +17,15 @@ public class CustomerDAO extends AbstractHibernateDao<Customer> {
         super(Customer.class, sessionFactory);
     }
 
-    public Customer findByName(String customerName) {
-        return getCurrentSession().createQuery("SELECT c FROM Customer c where c.name = :name", Customer.class)
-                .setParameter("name", customerName).getSingleResult();
+    public Optional<Customer> findByName(String customerName) {
+        return Optional.ofNullable(getCurrentSession().createQuery("SELECT c FROM Customer c where c.name = :name", Customer.class)
+                .setParameter("name", customerName).getSingleResult());
     }
 
-    public List<Customer> findAllByPaging(int page, int perPage) {
+    public List<Customer> findAllByPaging(int page, int size) {
         return getCurrentSession().createQuery("SELECT c from Customer c", Customer.class)
-                .setFirstResult((page * perPage) - perPage)
-                .setMaxResults(perPage).getResultList();
+                .setFirstResult((page * size) - size)
+                .setMaxResults(size).getResultList();
     }
 
     public List<Customer> findAllByCompany(Company company) {

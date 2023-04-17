@@ -16,6 +16,7 @@ import ru.example.utils.ErrorResponse;
 import ru.example.utils.exception.CompanyNotFoundException;
 import ru.example.utils.exception.CustomerNotFoundException;
 
+import java.util.Collections;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -34,13 +35,18 @@ public class CustomerController {
 
     @GetMapping
     public List<CustomerDto> getAll(@RequestParam(value = "page", required = false) Integer page,
-                                    @RequestParam(value = "per_page", required = false) Integer perPage) {
-        if (page != null && perPage != null) {
-            return customerService.findAll(page, perPage).stream().map(DtoUtil::customerToCustomerDto).collect(Collectors.toList());
-        } else {
-            return customerService.findAll().stream().map(DtoUtil::customerToCustomerDto).collect(Collectors.toList());
-        }
+                                    @RequestParam(value = "size", required = false) Integer size,
+                                    @RequestParam(value = "name", required = false) String name) {
+        List<Customer> customers;
 
+        if (name != null) {
+            customers = Collections.singletonList(customerService.findByName(name));
+        } else if (page != null && size != null) {
+            customers = customerService.findAll(page, size);
+        } else {
+            customers = customerService.findAll();
+        }
+        return customers.stream().map(DtoUtil::customerToCustomerDto).collect(Collectors.toList());
     }
 
     @GetMapping("/{id}")

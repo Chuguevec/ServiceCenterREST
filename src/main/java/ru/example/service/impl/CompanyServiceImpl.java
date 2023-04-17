@@ -29,6 +29,11 @@ public class CompanyServiceImpl implements CompanyService {
     }
 
     @Override
+    public Company findByName(String name) {
+        return companyDAO.findByName(name).orElseThrow(CompanyNotFoundException::new);
+    }
+
+    @Override
     public List<Company> findAll() {
         return companyDAO.findAll();
     }
@@ -50,6 +55,5 @@ public class CompanyServiceImpl implements CompanyService {
     public void delete(Company company) {
         companyDAO.delete(company);
     }
-
 
 }

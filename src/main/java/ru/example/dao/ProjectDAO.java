@@ -19,4 +19,10 @@ public class ProjectDAO extends AbstractHibernateDao<Project> {
         return getCurrentSession().createQuery("SELECT p FROM Project p where p.customer =:customer", Project.class)
                 .setParameter("customer", customer).getResultList();
     }
+
+    public List<Project> findAllWithPagination(Integer page, Integer size) {
+       return getCurrentSession().createQuery("SELECT p FROM Project p", Project.class)
+                .setFirstResult((page * size) - size)
+                .setMaxResults(size).getResultList();
+    }
 }

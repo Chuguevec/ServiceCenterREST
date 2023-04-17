@@ -11,6 +11,7 @@ import ru.example.entity.Customer;
 import ru.example.entity.Employee;
 import ru.example.entity.Project;
 import ru.example.service.ProjectService;
+import ru.example.utils.exception.CustomerNotFoundException;
 import ru.example.utils.exception.EmployeeNotFoundException;
 import ru.example.utils.exception.ProjectNotFoundException;
 
@@ -45,6 +46,13 @@ public class ProjectServiceImpl implements ProjectService {
     }
 
     @Override
+    public List<Project> findAllWithPagination(Integer page, Integer size) {
+        List<Project> projects = projectDAO.findAllWithPagination(page, size);
+        projects.forEach(project -> Hibernate.initialize(project.getEmployees()));
+        return projects;
+    }
+
+    @Override
     public List<Project> findAllByCustomer(Customer customer) {
         List<Project> projects = projectDAO.findAllByCustomer(customer);
         projects.forEach(project -> Hibernate.initialize(project.getEmployees()));
@@ -63,7 +71,7 @@ public class ProjectServiceImpl implements ProjectService {
     @Override
     @Transactional
     public Integer save(Project project) {
-        Customer customer = customerDAO.findByName(project.getCustomer().getName());
+        Customer customer = customerDAO.findByName(project.getCustomer().getName()).orElseThrow(CustomerNotFoundException::new);
         project.setCustomer(customer);
         return projectDAO.create(project).getId();
     }
@@ -74,7 +82,7 @@ public class ProjectServiceImpl implements ProjectService {
         //Check id
         projectDAO.findOne(updatedProject.getId()).orElseThrow(ProjectNotFoundException::new);
         //Initialize Customer
-        Customer customer = customerDAO.findByName(updatedProject.getCustomer().getName());
+        Customer customer = customerDAO.findByName(updatedProject.getCustomer().getName()).orElseThrow(CustomerNotFoundException::new);
         //сетаем зависимости с обоих сторон
         customer.getProjects().add(updatedProject);
         updatedProject.setCustomer(customer);

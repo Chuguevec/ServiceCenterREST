@@ -6,10 +6,13 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import ru.example.dto.ProjectShowDto;
 import ru.example.dto.ProjectToSaveDto;
+import ru.example.entity.Customer;
 import ru.example.entity.Project;
+import ru.example.service.CustomerService;
 import ru.example.service.ProjectService;
 import ru.example.utils.DtoUtil;
 import ru.example.utils.ErrorResponse;
+import ru.example.utils.exception.CustomerNotFoundException;
 import ru.example.utils.exception.EmployeeNotFoundException;
 import ru.example.utils.exception.ProjectNotFoundException;
 
@@ -21,15 +24,28 @@ import java.util.stream.Collectors;
 public class ProjectController {
 
     private final ProjectService projectService;
+    private final CustomerService customerService;
 
     @Autowired
-    public ProjectController(ProjectService projectService) {
+    public ProjectController(ProjectService projectService, CustomerService customerService) {
         this.projectService = projectService;
+        this.customerService = customerService;
     }
 
     @GetMapping
-    public List<ProjectShowDto> getAll() {
-        return projectService.findAll().stream().map(DtoUtil::projectToProjectShowDto).collect(Collectors.toList());
+    public List<ProjectShowDto> getAll(@RequestParam(value = "page", required = false) Integer page,
+                                       @RequestParam(value = "size", required = false) Integer size,
+                                       @RequestParam(value = "customer_name", required = false) String customerName) {
+        List<Project> projects;
+        if (customerName != null) {
+            Customer customer = customerService.findByName(customerName);
+            projects = projectService.findAllByCustomer(customer);
+        } else if (page != null && size != null) {
+            projects = projectService.findAllWithPagination(page, size);
+        } else {
+            projects = projectService.findAll();
+        }
+        return projects.stream().map(DtoUtil::projectToProjectShowDto).collect(Collectors.toList());
     }
 
     @GetMapping("/{id}")
@@ -74,6 +90,12 @@ public class ProjectController {
     @ExceptionHandler
     public ResponseEntity<ErrorResponse> handelException(EmployeeNotFoundException e) {
         ErrorResponse errorResponse = new ErrorResponse("Employee with this id not found", System.currentTimeMillis());
+        return new ResponseEntity<>(errorResponse, HttpStatus.NOT_FOUND);
+    }
+
+    @ExceptionHandler
+    public ResponseEntity<ErrorResponse> handelException(CustomerNotFoundException e) {
+        ErrorResponse errorResponse = new ErrorResponse("Customer with this name not found", System.currentTimeMillis());
         return new ResponseEntity<>(errorResponse, HttpStatus.NOT_FOUND);
     }
 }

@@ -10,7 +10,10 @@ public interface CustomerService {
     Customer findOne(int id);
 
     List<Customer> findAll();
+
     List<Customer> findAll(int page, int perPage);
+
+    Customer findByName(String name);
 
     List<Customer> findAllByCompany(Company company);
 
@@ -18,7 +21,8 @@ public interface CustomerService {
 
     Customer update(Customer customer);
 
-    void addProject (int customerId, Project project);
+    void addProject(int customerId, Project project);
 
     void delete(int id);
+
 }
