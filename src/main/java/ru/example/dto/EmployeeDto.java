@@ -4,7 +4,6 @@ import lombok.Getter;
 import lombok.Setter;
 
 
-
 @Getter
 @Setter
 public class EmployeeDto {
@@ -14,5 +13,5 @@ public class EmployeeDto {
     private String occupation;
     private Integer salary;
     private String companyName;
-  //  private List<ProjectDto> projects;
+
 }

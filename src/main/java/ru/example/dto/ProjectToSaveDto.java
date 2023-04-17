@@ -11,4 +11,5 @@ public class ProjectToSaveDto {
 
     private String name;
     private BigDecimal price;
+    private String customerName;
 }

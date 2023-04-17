@@ -56,8 +56,8 @@ public class CompanyController {
         return companyCustomers.stream().map(DtoUtil::customerToCustomerDto).collect(Collectors.toList());
     }
 
-    @GetMapping ("/{id}/employees")
-    public List<EmployeeDto> getEmployeesCompany(@PathVariable("id") Integer id){
+    @GetMapping("/{id}/employees")
+    public List<EmployeeDto> getEmployeesCompany(@PathVariable("id") Integer id) {
         Company company = companyService.findOne(id);
         List<Employee> employees = employeeService.findAllByCompany(company);
         return employees.stream().map(DtoUtil::employeeToEmployeeDto).collect(Collectors.toList());
@@ -78,7 +78,7 @@ public class CompanyController {
         Company updatedCompany = DtoUtil.companyDtoToCompany(companyDto);
         updatedCompany.setId(id);
         companyService.update(updatedCompany);
-            return ResponseEntity.status(HttpStatus.OK).body("Success update");
+        return ResponseEntity.status(HttpStatus.OK).body("Success update");
     }
 
     @DeleteMapping("/{id}")
@@ -87,13 +87,13 @@ public class CompanyController {
         return ResponseEntity.status(HttpStatus.OK).body("Success delete");
 
     }
+
     @ExceptionHandler
-    private ResponseEntity<ErrorResponse> handelException (CompanyNotFoundException e){
+    private ResponseEntity<ErrorResponse> handelException(CompanyNotFoundException e) {
         ErrorResponse response = new ErrorResponse(
                 "Company with this id not found", System.currentTimeMillis()
         );
         return new ResponseEntity<>(response, HttpStatus.NOT_FOUND);
     }
-
 
 }

@@ -38,7 +38,7 @@ public abstract class AbstractHibernateDao<T> implements IGenericDao<T> {
     @Override
     public Optional<T> update(T entity) {
         Preconditions.checkNotNull(entity, clazz.getName());
-        return Optional.ofNullable((T)getCurrentSession().merge(entity));
+        return Optional.ofNullable((T) getCurrentSession().merge(entity));
     }
 
     @Override

@@ -3,12 +3,12 @@ package ru.example.dao;
 import org.hibernate.SessionFactory;
 import org.hibernate.query.Query;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Component;
+import org.springframework.stereotype.Repository;
 import ru.example.entity.Company;
 
 import java.util.Optional;
 
-@Component
+@Repository
 public class CompanyDAO extends AbstractHibernateDao<Company> {
 
     @Autowired

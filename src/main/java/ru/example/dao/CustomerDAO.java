@@ -3,13 +3,13 @@ package ru.example.dao;
 import org.hibernate.SessionFactory;
 import org.hibernate.query.Query;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Component;
+import org.springframework.stereotype.Repository;
 import ru.example.entity.Company;
 import ru.example.entity.Customer;
 
 import java.util.List;
 
-@Component
+@Repository
 public class CustomerDAO extends AbstractHibernateDao<Customer> {
     @Autowired
     public CustomerDAO(SessionFactory sessionFactory) {

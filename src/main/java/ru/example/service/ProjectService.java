@@ -18,4 +18,6 @@ public interface ProjectService {
     void delete(int id);
 
     List<Project> findAllByCustomer(Customer customer);
+
+    void addProjectToEmployee(int projectId, Integer employeeId);
 }
