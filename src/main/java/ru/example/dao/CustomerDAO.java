@@ -17,13 +17,19 @@ public class CustomerDAO extends AbstractHibernateDao<Customer> {
         super(Customer.class, sessionFactory);
     }
 
+    @Override
+    public List<Customer> findAll() {
+        return getCurrentSession().createQuery("SELECT DISTINCT c from Customer c LEFT JOIN FETCH c.company  order by c.id", Customer.class)
+                .getResultList();
+    }
+
     public Optional<Customer> findByName(String customerName) {
         return Optional.ofNullable(getCurrentSession().createQuery("SELECT c FROM Customer c where c.name = :name", Customer.class)
                 .setParameter("name", customerName).getSingleResult());
     }
 
     public List<Customer> findAllByPaging(int page, int size) {
-        return getCurrentSession().createQuery("SELECT c from Customer c", Customer.class)
+        return getCurrentSession().createQuery("SELECT DISTINCT c from Customer c LEFT JOIN FETCH c.company order by c.id", Customer.class)
                 .setFirstResult((page * size) - size)
                 .setMaxResults(size).getResultList();
     }

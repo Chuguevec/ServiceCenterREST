@@ -17,11 +17,13 @@ import ru.example.utils.exception.CompanyNotFoundException;
 import ru.example.utils.exception.EmployeeNotFoundException;
 import ru.example.utils.exception.ProjectNotFoundException;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.stream.Collectors;
 
 @RestController
-@RequestMapping("/employee")
+@RequestMapping("/employees")
 public class EmployeeController {
     private final EmployeeService employeeService;
     private final CompanyService companyService;
@@ -38,10 +40,10 @@ public class EmployeeController {
         if (companyName != null) {
             Company company = companyService.findByName(companyName);
             employeeList = employeeService.findAllByCompany(company);
+            Map<String, String > map = new HashMap<>();
         } else {
             employeeList = employeeService.findAll();
         }
-
         return employeeList.stream().map(DtoUtil::employeeToEmployeeDto).collect(Collectors.toList());
     }
 
